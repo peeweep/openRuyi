@@ -1,0 +1,27 @@
+diff --git a/systemd/cloud-init-generator.tmpl b/systemd/cloud-init-generator.tmpl
+index e55ece6d2..ebcaab242 100644
+--- a/systemd/cloud-init-generator.tmpl
++++ b/systemd/cloud-init-generator.tmpl
+@@ -13,6 +13,7 @@ RUN_DISABLED_FILE="$LOG_D/$DISABLE"
+ CLOUD_TARGET_NAME="cloud-init.target"
+ # lxc sets 'container', but lets make that explicitly a global
+ CONTAINER="${container}"
++dsidentify="/usr/libexec/cloud-init/ds-identify"
+ 
+ # start: template section
+ {% if variant in ["suse"] %}
+@@ -20,14 +21,6 @@ CLOUD_SYSTEM_TARGET="/usr/lib/systemd/system/cloud-init.target"
+ {% else %}
+ CLOUD_SYSTEM_TARGET="/lib/systemd/system/cloud-init.target"
+ {% endif %}
+-{% if variant in ["almalinux", "centos", "cloudlinux", "eurolinux", "fedora",
+-                  "miraclelinux", "openeuler", "OpenCloudOS", "openmandriva", "rhel", "rocky", "TencentOS", "virtuozzo"] %}
+-    dsidentify="/usr/libexec/cloud-init/ds-identify"
+-{% elif variant == "benchmark" %}
+-    dsidentify="/bin/true"
+-{% else %}
+-    dsidentify="/usr/lib/cloud-init/ds-identify"
+-{% endif %}
+ # end: template section
+ 
+ debug() {

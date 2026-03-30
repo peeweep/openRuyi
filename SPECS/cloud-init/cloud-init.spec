@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -17,6 +18,7 @@ BuildSystem:    meson
 
 # skip some tests not support in build environment
 Patch0:         0001-skip-crate-user-tests.patch
+Patch1:         0002-fix-cloud-init-generator.patch
 
 BuildOption(conf):  -Dinit_system=systemd
 BuildOption(conf):  -Ddisable_sshd_keygen=true
