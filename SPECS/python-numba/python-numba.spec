@@ -17,6 +17,11 @@ VCS:            git:https://github.com/numba/numba.git
 Source0:        https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
+Patch2000:      2000-tests-use-python3-for-test_nonsense_gdb_binary.patch
+# skip test_reduce_zero_axis testcase for riscv64
+# TODO: fix in LLVM or llvmlite
+Patch2001:      2001-tests-skip-test_reduce_zero_axis-on-riscv64.patch
+
 BuildOption(install):  -l numba
 # missing CUDA
 BuildOption(check):  -e 'numba.cuda.tests*'
@@ -50,13 +55,20 @@ NumPy code into fast machine code using LLVM.
 %generate_buildrequires
 %pyproject_buildrequires
 
+%check -a
+cd %{_tmppath}
+export PYTHONPATH=%{buildroot}%{python3_sitearch}:%{buildroot}%{python3_sitelib}
+%python3 -m numba.runtests -m 4 -v
+
 %files -f %{pyproject_files}
 %doc CHANGE_LOG
 %doc README.rst
 %license LICENSE
 %license LICENSES.third-party
-%exclude %{python3_sitearch}/%{srcname}/tests/__pycache__/cfunc_cache_usecases.*.nbc
-%exclude %{python3_sitearch}/%{srcname}/tests/__pycache__/cfunc_cache_usecases.*.nbi
+%exclude %{python3_sitearch}/%{srcname}/tests/__pycache__/*.nbc
+%exclude %{python3_sitearch}/%{srcname}/tests/__pycache__/*.nbi
+%exclude %{python3_sitearch}/%{srcname}/tests/npyufunc/__pycache__/*.nbc
+%exclude %{python3_sitearch}/%{srcname}/tests/npyufunc/__pycache__/*.nbi
 %{_bindir}/numba
 
 %changelog

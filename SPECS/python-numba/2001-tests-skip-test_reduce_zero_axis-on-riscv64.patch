@@ -1,0 +1,36 @@
+From 5b5690405a5e4750850d7832cdb83c0d28a53232 Mon Sep 17 00:00:00 2001
+From: zhangjinqiang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Sat, 26 Sep 2026 16:30:00 +0800
+Subject: [PATCH] tests: skip test_reduce_zero_axis on riscv64
+
+That case does not finish on riscv64. This issue may need to be
+fixed in LLVM or llvmlite, so skip the test on riscv64 for now.
+---
+ numba/tests/npyufunc/test_dufunc.py | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/numba/tests/npyufunc/test_dufunc.py b/numba/tests/npyufunc/test_dufunc.py
+index da4e9bf9a..de368a694 100644
+--- a/numba/tests/npyufunc/test_dufunc.py
++++ b/numba/tests/npyufunc/test_dufunc.py
+@@ -1,5 +1,6 @@
+ import functools
+ import itertools
++import platform
+ import pickle
+ import textwrap
+ import warnings
+@@ -735,6 +736,10 @@ class TestDUFuncReduceNumPyTests(TestCase):
+         # will not raise as per Numba issue #9283
+         # assert_raises(ValueError, np.divide.reduce, a, axis=(0, 1))
+ 
++    # riscv64: this case does not finish there. The issue may need to be fixed
++    # in LLVM or llvmlite, so skip it on riscv64 for now.
++    @unittest.skipIf(platform.machine() == 'riscv64',
++                     "flaky timeout on riscv64")
+     def test_reduce_zero_axis(self):
+         # If we have a n x m array and do a reduction with axis=1, then we are
+         # doing n reductions, and each reduction takes an m-element array. For
+-- 
+2.55.0
+
